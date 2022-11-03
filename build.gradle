@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+}
+
+group 'io.github.leofuso'
+version '1.0-SNAPSHOT'
+sourceCompatibility = JavaVersion.VERSION_19
+targetCompatibility = JavaVersion.VERSION_19
+
+repositories {
+    mavenCentral()
+}
+
+compileJava {
+    options.compilerArgs += ['--enable-preview']
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+}
+
+test {
+    jvmArgs += ['--enable-preview']
+    useJUnitPlatform()
+}
