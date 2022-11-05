@@ -33,8 +33,8 @@ dependencies {
 
 jmh {
     iterations = 10
-    benchmarkMode = ['all']
-    fork = 2
+    benchmarkMode = ['avgt']
+    fork = 5
     failOnError = true
     forceGC = false
     jvmArgs = ['--add-modules', 'jdk.incubator.vector']
@@ -43,10 +43,10 @@ jmh {
     operationsPerInvocation = 10
     timeOnIteration = '1s'
     threads = 12
-    timeUnit = 'ns'
-    verbosity = 'EXTRA'
+    timeUnit = 'ms'
+    verbosity = 'NORMAL'
     warmup = '1s'
-    warmupForks = 0
+    warmupForks = 2
     warmupIterations = 5
     warmupMode = 'INDI'
 }

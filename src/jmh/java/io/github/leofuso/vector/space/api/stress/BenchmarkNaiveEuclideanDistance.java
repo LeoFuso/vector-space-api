@@ -24,7 +24,7 @@ public class BenchmarkNaiveEuclideanDistance {
 
     @Setup
     public void setup() {
-        final long fixedSize = MemoryFixture.bytesInMiB(64);
+        final long fixedSize = MemoryFixture.bytesInKiB(384);
         x1 = ArrayFixture.generate(7, fixedSize);
         x2 = ArrayFixture.generate(23, fixedSize);
         subject = EuclideanDistance.naive();

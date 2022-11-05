@@ -9,4 +9,8 @@ public interface MemoryFixture {
         return mib * MIB;
     }
 
+    static long bytesInKiB(int kib) {
+        return kib * KIB;
+    }
+
 }
