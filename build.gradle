@@ -1,5 +1,8 @@
+import me.champeau.jmh.JmhBytecodeGeneratorTask
+
 plugins {
     id 'java'
+    id 'me.champeau.jmh' version '0.6.8'
 }
 
 group 'io.github.leofuso'
@@ -12,7 +15,15 @@ repositories {
 }
 
 compileJava {
-    options.compilerArgs += ['--enable-preview']
+    options.compilerArgs += ['--enable-preview', '--add-modules', 'jdk.incubator.vector']
+}
+
+compileTestJava {
+    options.compilerArgs += ['--enable-preview', '--add-modules', 'jdk.incubator.vector']
+}
+
+compileJmhJava {
+    options.compilerArgs += ['--enable-preview', '--add-modules', 'jdk.incubator.vector']
 }
 
 dependencies {
@@ -20,7 +31,34 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
 }
 
+jmh {
+    iterations = 10
+    benchmarkMode = ['all']
+    fork = 2
+    failOnError = true
+    forceGC = false
+    jvmArgs = ['--add-modules', 'jdk.incubator.vector']
+    profilers = ['perfnorm']
+    jvmArgsAppend = ['--enable-preview', '--add-modules', 'jdk.incubator.vector']
+    operationsPerInvocation = 10
+    timeOnIteration = '1s'
+    threads = 12
+    timeUnit = 'ns'
+    verbosity = 'EXTRA'
+    warmup = '1s'
+    warmupForks = 0
+    warmupIterations = 5
+    warmupMode = 'INDI'
+}
+
+
+jmhRunBytecodeGenerator {
+    jvmArgs.add '--add-modules=jdk.incubator.vector'
+}
+
 test {
-    jvmArgs += ['--enable-preview']
+    minHeapSize = '128m'
+    maxHeapSize = '2G'
+    jvmArgs += ['--enable-preview', '--add-modules', 'jdk.incubator.vector']
     useJUnitPlatform()
 }
