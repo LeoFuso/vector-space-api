@@ -1,6 +1,9 @@
 package io.github.leofuso.vector.space.api.test;
 
 import java.io.IOException;
+import java.lang.foreign.MemorySegment;
+import java.lang.foreign.MemorySession;
+import java.lang.foreign.ValueLayout;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.file.Files;
@@ -77,5 +80,44 @@ class DistanceMeasureTest {
 
         /* Then */
         assertEquals(3.90926, result, 0.00001);
+    }
+
+    @RepeatedTest(10)
+    @DisplayName("""
+            Given NativeVectorizedSquaredEuclideanDistance run,
+            then calculate() invocation should return value within margin of error.
+            """
+    )
+    void t2() {
+
+        try(final MemorySession session = MemorySession.openShared()) {
+
+            /* Given */
+            final int oneMb = 1024 * 1024;
+            final MemorySegment s1 = MemorySegment.allocateNative(
+                    oneMb,
+                    ValueLayout.OfDouble.JAVA_DOUBLE.byteAlignment(),
+                    session
+            );
+
+            final MemorySegment s2 = MemorySegment.allocateNative(
+                    oneMb,
+                    ValueLayout.OfDouble.JAVA_DOUBLE.byteAlignment(),
+                    session
+            );
+
+            for (int i = 0; i < x1.length; i++) {
+                s1.setAtIndex(ValueLayout.OfDouble.JAVA_DOUBLE, i, x1[i]);
+                s2.setAtIndex(ValueLayout.OfDouble.JAVA_DOUBLE, i, x2[i]);
+            }
+
+            final DistanceMeasure measure = EuclideanDistance.usingNative();
+
+            /* When */
+            final double result = measure.compute(s1, s2, x1.length);
+
+            /* Then */
+            assertEquals(3.90926, result, 0.00001);
+        }
     }
 }

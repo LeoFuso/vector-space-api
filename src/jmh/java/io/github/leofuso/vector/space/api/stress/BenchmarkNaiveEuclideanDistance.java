@@ -2,13 +2,14 @@ package io.github.leofuso.vector.space.api.stress;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
-import io.github.leofuso.vector.space.api.EuclideanDistance;
 import io.github.leofuso.vector.space.api.DistanceMeasure;
+import io.github.leofuso.vector.space.api.EuclideanDistance;
 import io.github.leofuso.vector.space.api.stress.support.ArrayFixture;
 import io.github.leofuso.vector.space.api.stress.support.MemoryFixture;
 
@@ -31,7 +32,15 @@ public class BenchmarkNaiveEuclideanDistance {
     }
 
     @Benchmark
-    public void b1() {
+    public void naive() {
+        subject.compute(x1, x2);
+    }
+
+    @Benchmark
+    @Fork(value = 2,
+          jvmArgsAppend = {"-XX:UseSSE=0", "-XX:UseAVX=0"} /* Apparently this didn't work, grr. */
+    )
+    public void naiveNoOptimization() {
         subject.compute(x1, x2);
     }
 
